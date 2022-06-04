@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Follow;
 use App\Models\User;
 use App\Models\UserPic;
 use Carbon\Carbon;
@@ -128,6 +129,28 @@ class UsersController extends BaseController
       ];
     }
     return ['success' => $success, 'data' => $data];
+  }
+
+  public function toggleFollow(int $following_id, string $to_follow)
+  {
+    if (!session()->has(['username', 'user_id'])) {
+      redirect('/login');
+    }
+
+    $followed = is_null($following_id) && session()->has('profile') ?
+        session()->get('profile') : $following_id;
+
+    $follower = session()->get('user_id');
+    if ($to_follow == 'true') {
+      $follow = new Follow;
+      $follow->follower = $follower;
+      $follow->following = $followed;
+      $follow->save();
+    } else {
+      Follow::where('follower', $follower)->where('following', $followed)->delete();
+    }
+
+    echo json_encode(['success' => true]);
   }
 }
 ?>

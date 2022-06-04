@@ -26,6 +26,7 @@ Route::get('/get_pics/{user_id}', 'App\Http\Controllers\UsersController@getPics'
 Route::get('/get_username/{user_id}', 'App\Http\Controllers\UsersController@getUsername');
 Route::get('/is_registered/{field}/{value}', 'App\Http\Controllers\UsersController@isRegistered');
 Route::get('/is_followed/{other_id}', 'App\Http\Controllers\UsersController@isFollowed');
+Route::get('/toggle_follow/{following_id?}/{to_follow}', 'App\Http\Controllers\UsersController@toggleFollow');
 Route::post('/register', 'App\Http\Controllers\UsersController@addUser');
 
 Route::get('/login', 'App\Http\Controllers\LoginController@show');
