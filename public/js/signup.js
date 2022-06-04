@@ -144,7 +144,7 @@ function subSignup(event) {
           console.log(json.message);
           window.location.href = json.message;
         } else {
-          console.log("NO BUONO");
+          console.log("Errore");
         }
       });
   }
