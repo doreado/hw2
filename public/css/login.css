@@ -1,0 +1,62 @@
+@import url(./colors.css);
+
+html {
+  background-color: var(--gb-dark0_soft);
+}
+
+body {
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* padding: 20%; */
+
+  background-color: #32302f;
+  border-width: 2px;
+  border-style: solid;
+  border-color: gainsboro;
+}
+
+#login-screen {
+  padding: 3em;
+  border-radius: 1em;
+  border-style: solid;
+  border-color: gainsboro;
+  background-color: whitesmoke;
+  align-items: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  color: var(--gb-brighter_blue);
+}
+
+label {
+  color: var(--gb-light0);
+  margin-right: 5.5px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+
+  border-width: 2px;
+  border-radius: 2px;
+  border-color: var(--gb-light0);
+}
+
+.error {
+  color: var(--gb-bright_red);
+}
+
+.validation-error{
+  color: var(--gb-bright_red);
+}
+
+#new-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

@@ -1,0 +1,151 @@
+@import url(./colors.css);
+
+#site-name {
+  font-family: 'Frijole', cursive;
+  font-style: italic;
+  font-size: 1.75em;
+  font-weight: bold;
+
+  color: red !important;
+}
+
+#login-screen, #signup-screen {
+  padding: 3em;
+  border-radius: 1em;
+  border-style: solid;
+  border-color: gainsboro;
+  background-color: whitesmoke;
+  align-items: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+nav {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 2px 20px;
+  background-color: var(--gb-dark0_soft);
+  border-bottom: 5px solid gainsboro;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#nav-title {
+  z-index: 3;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+body {
+  /* background-color: var(--gb-dark0); */
+  background-color: var(--dutch-white);
+  background-color: white;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:link {
+  color: #006eff;
+}
+
+a:visited {
+  color: #006eff;
+}
+
+h1 {
+  color: var(--gb-light4);
+}
+
+p {
+  color: black;
+}
+
+.post {
+  width: 100%;
+}
+
+.post-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.post-header-left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post-profile-pic-box {
+  height: 60px;
+  width: 60px;
+  margin-right: 10px;
+}
+
+.post-profile-name {
+  /* color: var(--gb-neutral_aqua); */
+  color: black;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+#post-pic-box {
+  display: flex;
+  width: 100%;
+  height: 500px;
+  margin-bottom: 15px;
+  justify-content: center;
+}
+#post-pic-box img {
+  height: 100%;
+  /* width: 100%; */
+}
+
+.tab-row {
+  color: black;
+  display: flex;
+  justify-content: center;
+  /* flex-direction: row; */
+  /* align-items: center; */
+  justify-content: space-around;
+  margin-top: 4px;
+}
+
+.tab-row-option {
+  width: 100%;
+  text-align: center;
+  border-bottom: 2px solid gainsboro;
+}
+
+.tab-row-option:hover{
+  color:#000!important;
+  background-color:#f1f1f1!important;
+  border-top-right-radius: 1em;
+  border-top-left-radius: 1em;
+}
+
+.tab-row-option.selected{
+  /* border-bottom: 3px solid var(--gb-neutral_red); */
+  background-color: whitesmoke;
+  border-top: 2px solid gainsboro;
+  border-left: 2px solid gainsboro;
+  border-right: 2px solid gainsboro;
+  border-bottom: 0px;
+  border-top-right-radius: 1em;
+  border-top-left-radius: 1em;
+}
+
+.tab-row-option.selected:hover {
+  background-color: unset;
+}
+
+.hidden {
+  display: none !important;
+}

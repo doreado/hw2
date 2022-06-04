@@ -1,0 +1,235 @@
+@import url(./colors.css);
+
+body {
+  margin: 0px;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 49px auto 10px auto
+}
+
+#home-header {
+  display: flex;
+  margin-top: 60px;
+  margin-bottom: 10px;
+}
+
+#home-header-right {
+  width: 100%;
+}
+
+.home-header-icon {
+  height: 20px;
+  width: 100%;
+}
+
+.home-header-icon img{
+  height: 100%
+}
+
+#title-link div {
+  color: whitesmoke;
+}
+
+#search-region, #new-post {
+  display: flex;
+  padding: 5px;
+
+  border-bottom: 2px solid var(--gb-gray_244);
+  margin-bottom: 20px;
+}
+
+div#content-new-post {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  margin-top: 4px;
+  width: 100%;
+}
+
+.profile-pic-box, div#profile-pic {
+  /* position: absolute; */
+  /* top: 60%; */
+  height: 80px;
+  width: 80px;
+  margin-right: 20px
+  /* z-index: 1; */
+}
+
+.profile-pic, div#profile-pic img, .post-profile-pic {
+  border-radius: 50%;
+  height: 100%;
+}
+
+div#post-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+div#icon-links {
+  display: flex;
+}
+
+.post, .search-results-box {
+  width: 1012px;
+  background-color: whitesmoke;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 2px solid gainsboro;
+}
+
+.result-box-left {
+  display: flex;;
+}
+div#post-text {
+  border-bottom: 2px solid var(--gb-gray_244);
+  height: 100%;
+}
+
+#modal-post {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  top: 50px;
+}
+
+#modal-content {
+  background-color: #f2a2f4;
+}
+
+.post-foot {
+  display: flex;
+  height: 40px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px;
+  border-top: 3px solid gainsboro;
+}
+
+.icon-box {
+  display: flex;
+  align-items: center;
+  border-radius: 50%;
+  padding: 7px;
+  height: 30px;
+  width: 30px;
+}
+
+.icon-box img {
+  width: 100%;
+  margin-right: 10px;
+}
+
+.view.hidden {
+  display: none !important;
+}
+
+.back-icon-box {
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.x-icon-box {
+  height: 20px;
+  align-items: center;
+}
+
+.follow-button-box {
+  height: 30px;
+  align-items: center;
+}
+
+.follow-button, .x-icon, .back-icon {
+  height: 100%;
+  border-radius: 50%;
+  padding: 0.25em;
+}
+
+.poster-box {
+  width: 100px;
+  height: 100px;
+}
+
+.result-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+.users-result-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#search-movie-box {
+  display: flex;
+  align-items: center;
+}
+
+.watchlist-button-box:hover, .icon-box:hover, .follow-button:hover, .back-icon:hover, .result-box:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.poster {
+  height: 100%;
+}
+
+.watchlist-button-box {
+  height: 30px;
+  width: 30px;
+  padding: 0.5em;
+  border-radius: 1em;
+}
+
+.watchlist-button {
+  height: 100%;
+}
+
+.post-profile-name:visited {
+  color: black;
+}
+
+#more-results {
+  border-radius: 1em;
+  background-color: whitesmoke;
+  padding: 1em;
+  border: 2px;
+  border-style: solid;
+  border-color: gainsboro;
+}
+
+#home-posts-visible {
+  width: 100%;
+}
+
+#home-posts {
+  display: flex;
+  /* width: 100%; */
+  flex-direction: column;
+  align-items: center;
+}
+
+#more-results:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+@media (max-width: 1012px) {
+  section {
+    margin:  49px 0px auto 0px ;
+  }
+
+  #home-posts {
+    width: 100%;
+  }
+  .post {
+    width: auto;
+  }
+}
+

@@ -1,0 +1,56 @@
+:root {
+  --gb-dark0_hard     :#1d2021;
+  --gb-dark0          :#282828;
+  --gb-dark0_soft     :#32302f;
+  --gb-dark1          :#3c3836;
+  --gb-dark2          :#504945;
+  --gb-dark3          :#665c54;
+  --gb-dark4          :#7c6f64;
+  --gb-dark4_256      :#7c6f64;
+  --gb-gray_245       :#928374;
+  --gb-gray_244       :#928374;
+  --gb-light0_hard    :#f9f5d7;
+  --gb-light0         :#fbf1c7;
+  --gb-light0_soft    :#f2e5bc;
+  --gb-light1         :#ebdbb2;
+  --gb-light2         :#d5c4a1;
+  --gb-light3         :#bdae93;
+  --gb-light4         :#a89984;
+  --gb-light4_256     :#a89984;
+  --gb-bright_red     :#fb4934;
+  --gb-bright_green   :#b8bb26;
+  --gb-bright_yellow  :#fabd2f;
+  --gb-bright_blue    :#83a598;
+  --gb-brighter_blue  :#A0B8C8;
+  --gb-bright_purple  :#d3869b;
+  --gb-bright_aqua    :#8ec07c;
+  --gb-bright_orange  :#fe8019;
+  --gb-neutral_red    :#cc241d;
+  --gb-neutral_green  :#98971a;
+  --gb-neutral_yellow :#d79921;
+  --gb-neutral_blue   :#458588;
+  --gb-neutral_purple :#b16286;
+  --gb-neutral_aqua   :#689d6a;
+  --gb-neutral_orange :#d65d0e;
+  --gb-faded_red      :#9d0006;
+  --gb-faded_green    :#79740e;
+  --gb-faded_yellow   :#b57614;
+  --gb-faded_blue     :#076678;
+  --gb-faded_purple   :#8f3f71;
+  --gb-faded_aqua     :#427b58;
+  --gb-faded_orange   :#af3a03;
+}
+
+:root {
+  --dutch-white: #e2d4b7;
+  --grullo: #c9583;
+  --quick-silver: #a1a499;
+  --silver-sand: #b0bbbf;
+  --ash-gray: #cadbc8;
+}
+
+:root {
+  --light-blue: #eaf6f6;
+  --white: #fcfefe;
+  --gray: #e3e3e3;
+}
