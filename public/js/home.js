@@ -296,7 +296,7 @@ function onResultBoxClick(event) {
         .then(json => {
           if (json.success) {
             offset++;
-            displayPost(json.data, document.querySelector("#home-posts"), true);
+            displayPost(json.data, document.querySelector("#home-posts-visible"), true);
 
             const searchMovieBox = document.getElementById('search-movie-box');
             const xIconBox = document.querySelector('.x-icon-box');
