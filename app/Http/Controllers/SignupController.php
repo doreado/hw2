@@ -12,7 +12,9 @@ class SignupController extends BaseController
 {
   public function show()
   {
-    $this->isLogged();
+    if (session()->has(['username', 'user_id'])) {
+      return redirect('/home');
+    }
 
     return view('signup');
   }

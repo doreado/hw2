@@ -41,8 +41,8 @@ class UsersController extends BaseController
 
   public function addUser()
   {
-    if (session()->has(['username', 'user_id'])) {
-      redirect('/home');
+    if (!session()->has(['username', 'user_id'])) {
+      redirect('/login');
     }
 
     $request = request()->all();
@@ -68,10 +68,10 @@ class UsersController extends BaseController
     return redirect('/home');
   }
 
-  public function getUsername(string $user_id)
+  public function getUsername(int $user_id)
   {
-    if (session()->has(['username', 'user_id'])) {
-      redirect('/home');
+    if (!session()->has(['username', 'user_id'])) {
+      redirect('/login');
     }
 
     // check if exists
@@ -86,10 +86,10 @@ class UsersController extends BaseController
     echo json_encode( ['success' => $success, 'username' => $username] );
   }
 
-  public function getPics(string $user_id)
+  public function getPics(int $user_id)
   {
-    if (session()->has(['username', 'user_id'])) {
-      redirect('/home');
+    if (!session()->has(['username', 'user_id'])) {
+      redirect('/login');
     }
 
     $pics = UserPic::where('user', $user_id)->get()->first();

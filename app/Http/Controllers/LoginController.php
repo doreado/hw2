@@ -10,21 +10,19 @@ use function request;
 
 class LoginController extends BaseController
 {
-  private function isLogged() {
+  public function show()
+  {
     if (session()->has(['username', 'user_id'])) {
       return redirect('/home');
     }
-  }
-
-  public function show()
-  {
-    $this->isLogged();
 
     return view('login');
   }
 
   public function checkCredential() {
-    $this->isLogged();
+    if (session()->has(['username', 'user_id'])) {
+      return redirect('/home');
+    }
 
     $request = request()->post();
     if (request()->missing(['username', 'password'])) {
