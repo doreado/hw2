@@ -55,6 +55,24 @@ class UsersController extends BaseController
     return redirect('/home');
   }
 
+  public function getUsername(string $user_id)
+  {
+    if (session()->has(['username', 'user_id'])) {
+      redirect('/home');
+    }
+
+    // check if exists
+    $username = User::find($user_id);
+    if ($username != null) {
+      $success = true;
+      $username = $username->get('username')->first()['username'];
+    } else {
+      $success = false;
+    }
+
+    echo json_encode( ['success' => $success, 'username' => $username] );
+  }
+
   public function getPics(string $user_id)
   {
     if (session()->has(['username', 'user_id'])) {

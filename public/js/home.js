@@ -3,7 +3,7 @@ let offset = 0;
 function updateLIke(target, action) {
   if (['add', 'remove'].includes(action)) {
     const postId = target.dataset.postId;
-    fetch("http://localhost/hw1/" + action + "_like.php?post_id=" + postId)
+    fetch(action + "_like/" + postId)
       .then(response => response.json())
       .then(json => {
         if (!json.success) {
@@ -71,12 +71,23 @@ function getPost(post, ref) {
   return postCurr;
 }
 
-function displayPost(post, view, onTop) {
-  const ref = onTop ? view.firstChild : view.lastChild ? view.lastChild.nextSibling : null;
+function appendMoviePoster(post, divPost) {
+  const postPicBox = document.createElement("div");
+  postPicBox.setAttribute("id", "post-pic-box");
+  const postPic = document.createElement("img");
+  postPicBox.appendChild(postPic);
+  divPost.appendChild(postPicBox);
 
-  const newPost = getPost(post, ref);
-  view.insertBefore(newPost, ref);
+  fetch("/get_movie_poster/" + post.type_id)
+    .then(response => response.json())
+    .then(json => {
+      if (json.success) {
+        postPic.src = json.src;
+      }
+    });
+}
 
+function appendPostHeader(post, divPost) {
   const postHeader = document.createElement("div");
   postHeader.setAttribute("class", "post-header");
   const postHeaderLeft = document.createElement("div");
@@ -90,7 +101,7 @@ function displayPost(post, view, onTop) {
   const profilePic = document.createElement("img");
   profilePicBox.appendChild(profilePic);
   postHeaderLeft.appendChild(profilePicBox);
-  fetch("/get_pic/" + post.user)
+  fetch("/get_pics/" + post.user)
     .then(response => response.json())
     .then(json => {
       if (!json.profile_pic.empty) {
@@ -103,36 +114,26 @@ function displayPost(post, view, onTop) {
 
   const postProfileName = document.createElement("a");
   postHeaderLeft.appendChild(postProfileName);
-  fetch("http://localhost/hw1/username.php?user_id=" + post.user)
+  fetch("/get_username/" + post.user)
     .then(response => response.json())
     .then(json => {
       if (json.success) {
         postProfileName.setAttribute("id", "post-" + post.id + "-profile-name");
         postProfileName.setAttribute("class", "post-profile-name");
-        postProfileName.setAttribute("href", "http://localhost/hw1/profile.php?u=" + post.user);
+        postProfileName.setAttribute("href", "/profile/" + post.user);
         postProfileName.textContent = json.username;
       }
     });
-  newPost.appendChild(postHeader);
+  divPost.appendChild(postHeader);
+}
 
+function appendPostText(text, newPost) {
   const postText = document.createElement("p");
-  postText.textContent = post.content;
+  postText.textContent = text;
   newPost.appendChild(postText);
+}
 
-  const postPicBox = document.createElement("div");
-  postPicBox.setAttribute("id", "post-pic-box");
-  const postPic = document.createElement("img");
-  postPicBox.appendChild(postPic);
-  newPost.appendChild(postPicBox);
-
-  fetch("http://localhost/hw1/get_movie_poster.php?movie_id=" + post.type_id)
-    .then(response => response.json())
-    .then(json => {
-      if (json.success) {
-        postPic.src = json.src;
-      }
-    });
-
+function appendPostFoot(post, newPost) {
   const postFoot = document.createElement("div");
   postFoot.classList.add("post-foot");
   newPost.appendChild(postFoot);
@@ -145,25 +146,35 @@ function displayPost(post, view, onTop) {
   likeIconBox.addEventListener('click', toggleLike);
   postFoot.appendChild(likeIconBox);
   const likeIcon = document.createElement("img");
-  fetch("http://localhost/hw1/liked.php?post_id=" + post.id)
+  fetch("/is_liked/" + post.id)
     .then(response => response.json())
     .then(json => {
-      if (json.success) {
-        likeIcon.src = json.like_pic;
-        likeIconBox.dataset.liked = json.liked;
-      }
+      likeIcon.src = json.like_pic;
+      likeIconBox.dataset.liked = json.liked;
     });
   likeIconBox.appendChild(likeIcon);
 
   const likeNum = document.createElement("span");
   likeIconBox.appendChild(likeNum);
-  fetch("http://localhost/hw1/like_number.php?post_id=" + post.id)
+  fetch("/get_like_number/" + post.id)
     .then(response => response.json())
     .then(json => {
       if (json.success) {
         likeNum.textContent = json.num_like;
       }
     })
+}
+
+function displayPost(post, view, onTop) {
+  const ref = onTop ? view.firstChild : view.lastChild ? view.lastChild.nextSibling : null;
+
+  const newPost = getPost(post, ref);
+  view.insertBefore(newPost, ref);
+
+  appendPostHeader(post, newPost);
+  appendPostText(post.content, newPost);
+  appendMoviePoster(post, newPost);
+  appendPostFoot(post, newPost)
 }
 
 function viewPosts(data, view) {
@@ -173,7 +184,7 @@ function viewPosts(data, view) {
 }
 
 function getPosts() {
-  fetch("http://localhost/hw1/get_posts.php/?offset=" + offset)
+  fetch("/get_posts/" + offset)
     .then(response => response.json())
     .then(json => {
       if (json.empty) {

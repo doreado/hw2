@@ -13,6 +13,11 @@ use function request;
 
 class MovieController extends BaseController
 {
+  private function getKey()
+  {
+    return env('MOVIE_KEY');
+  }
+
   public function searchMovie(string $movie)
   {
     if (!session()->has(['username', 'user_id'])) {
@@ -24,7 +29,7 @@ class MovieController extends BaseController
     }
 
     $user_id = session()->get('user_id');
-    $api_key = env('MOVIE_KEY');
+    $api_key = $this->getKey() ;
     $movie = urlencode($movie);
     $endpoint = "https://api.themoviedb.org/3/search/movie?api_key=".$api_key."&query=".$movie."&total_results=10";
 
@@ -61,6 +66,38 @@ class MovieController extends BaseController
     }
 
     return ['success' => $success, 'data' => $data];
+  }
+
+  public function getMoviePoster(string $movie_id)
+  {
+    if (!session()->has(['username', 'user_id'])) {
+      return redirect('/login');
+    }
+
+    if (is_null($movie_id)) {
+      return redirect('/home');
+    }
+
+    $user_id = session()->get('user_id');
+    $api_key = $this->getKey() ;
+    $base_url = "http://api.themoviedb.org/3";
+    $endpoint = "/movie/".$movie_id."/images?api_key=".$api_key;
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $base_url.$endpoint);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $result = curl_exec($curl);
+    curl_close($curl);
+
+    $result_array = json_decode($result, true);
+    // TODO check if exists
+    $poster_id = $result_array['posters'][0]['file_path'];
+    $base_src = "https://www.themoviedb.org/t/p/original/";
+    $src = $base_src.$poster_id;
+    $success = true;
+    $response = ['success' => true, 'src' => $src];
+
+    return $response;
   }
 }
 ?>
