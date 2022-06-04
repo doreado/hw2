@@ -36,6 +36,6 @@ function createNav(type) {
   nav.appendChild(logoutBox);
   const logout = document.createElement('a');
   logout.textContent = "LOGOUT";
-  logout.href = 'logout.php';
+  logout.href = '/logout';
   logoutBox.appendChild(logout);
 }

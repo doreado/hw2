@@ -43,3 +43,5 @@ Route::get('/is_liked/{post_id}', 'App\Http\Controllers\PostController@isLiked')
 Route::get('/get_like_number/{post_id}', 'App\Http\Controllers\PostController@getLikeNumber');
 Route::get('/add_like/{post_id}', 'App\Http\Controllers\PostController@addLike');
 Route::get('/remove_like/{post_id}', 'App\Http\Controllers\PostController@removeLike');
+
+Route::get('/logout', 'App\Http\Controllers\LogoutController@logout');
