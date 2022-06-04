@@ -16,6 +16,18 @@ class UsersController extends BaseController
     return ['is_registered' => $exists];
   }
 
+  public function isFollowed(string $other_id)
+  {
+    if (!session()->has(['username', 'user_id'])) {
+      redirect('/login');
+    }
+
+    $user_id = session()->get('user_id');
+    $is_followed = Follow::where('follower', $user_id)->where('following', $other_id)->get()->first();
+    $is_followed= !is_null($is_followed);
+    return ['is_followed' => $is_followed];
+  }
+
   public function whoami()
   {
     if (!session()->has(['username', 'user_id'])) {
@@ -92,6 +104,30 @@ class UsersController extends BaseController
     ];
 
     return $res;
+  }
+
+  public function searchUsers(string $user_query)
+  {
+    if (!session()->has(['username', 'user_id'])) {
+      redirect('/login');
+    }
+
+    $user_id = session()->get('user_id');
+    $users = User::where('username', 'like', '%' .$user_query. '%')
+      ->where('id', '!=', $user_id)->limit('10')->get();
+    $success = !is_null($users->first);
+    $data = array();
+    foreach ($users as $user) {
+      $pic =  $user->userPics->toArray();
+      $data[] = [
+        'id' => $user->id,
+        'username' => $user->username,
+        'profile_pic' => base64_encode($pic['profile_pic']),
+        'cover_pic' => base64_encode($pic['cover_pic']),
+        // 'followed' => followed($db, $row->id)
+      ];
+    }
+    return ['success' => $success, 'data' => $data];
   }
 }
 ?>

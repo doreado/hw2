@@ -21,9 +21,11 @@ Route::get('/test/', function () {
 Route::get('/signup', 'App\Http\Controllers\SignupController@show');
 
 Route::get('/whoami', 'App\Http\Controllers\UsersController@whoami');
+Route::get('/search_users/{user_query}', 'App\Http\Controllers\UsersController@searchUsers');
 Route::get('/get_pics/{user_id}', 'App\Http\Controllers\UsersController@getPics');
 Route::get('/get_username/{user_id}', 'App\Http\Controllers\UsersController@getUsername');
 Route::get('/is_registered/{field}/{value}', 'App\Http\Controllers\UsersController@isRegistered');
+Route::get('/is_followed/{other_id}', 'App\Http\Controllers\UsersController@isFollowed');
 Route::post('/register', 'App\Http\Controllers\UsersController@addUser');
 
 Route::get('/login', 'App\Http\Controllers\LoginController@show');
@@ -32,6 +34,7 @@ Route::get('/home', 'App\Http\Controllers\HomeController@getHome');
 
 Route::get('/search_movie/{movie}', 'App\Http\Controllers\MovieController@searchMovie');
 Route::get('/get_movie_poster/{movie_id}', 'App\Http\Controllers\MovieController@getMoviePoster');
+Route::get('/toggle_movie_in_watchlist/{movie_id}', 'App\Http\Controllers\MovieController@toggleMovieInWatchlist');
 
 Route::get('/add_post/{type}/{type_id}/{text}', 'App\Http\Controllers\PostController@addPost');
 Route::get('/get_posts/{offset}', 'App\Http\Controllers\PostController@getPosts');

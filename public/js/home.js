@@ -394,7 +394,7 @@ function onFollowButton(event) {
   clicked.setAttribute("data-followed", toFollow);
   clicked.src = toFollow ? 'figures/followed_dark.png' : 'figures/not_followed_dark.png';
   fetch("http://localhost/hw1/follow.php?followed_id="
-    + clicked.dataset.followedId + "&to_follow=" + toFollow)
+    + clicked.dataset.otherUserId + "&to_follow=" + toFollow)
     .then(response => response.json())
     .then(json => {
       if (!json.success) {
@@ -402,7 +402,7 @@ function onFollowButton(event) {
       }
     })
 
-  updateHome(clicked.dataset.followedId, toFollow);
+  updateHome(clicked.dataset.otherUserId, toFollow);
 }
 
 function displayUserSearchResult(result) {
@@ -413,7 +413,6 @@ function displayUserSearchResult(result) {
   resultBox.setAttribute("class", "users-result-box");
   searchResultBox.appendChild(resultBox);
 
-  // aggiungi link per la pagina utente e il bottone per aggiunngere il profilo
   const posterBox = document.createElement("div");
   posterBox.classList.add("profile-pic-box");
   resultBox.appendChild(posterBox);
@@ -423,7 +422,7 @@ function displayUserSearchResult(result) {
   posterBox.appendChild(poster);
 
   const title = document.createElement("a");
-  title.setAttribute('href', "http://localhost/hw1/profile.php?u=" + result.id);
+  title.setAttribute('href', "/profile/" + result.id);
   title.textContent = result.username;
   resultBox.appendChild(title);
 
@@ -431,11 +430,15 @@ function displayUserSearchResult(result) {
   followButtonBox.setAttribute("class", "follow-button-box");
   resultBox.appendChild(followButtonBox);
   const followButton = document.createElement("img");
+  fetch("/is_followed/" + result.id).then(response => response.json())
+    .then(json => {
+      followButton.src = json.is_followed ? 'figures/followed_dark.png' : 'figures/not_followed_dark.png';
+      followButton.setAttribute("data-followed", json.is_followed);
+    })
+
   followButton.setAttribute("class", "follow-button")
   followButtonBox.appendChild(followButton);
-  followButton.src = result.followed ? 'figures/followed_dark.png' : 'figures/not_followed_dark.png';
-  followButton.setAttribute("data-followed", result.followed);
-  followButton.setAttribute("data-followed-id", result.id);
+  followButton.setAttribute("data-other-user-id", result.id);
   followButton.addEventListener('click', onFollowButton);
 }
 
@@ -548,7 +551,7 @@ function onSearchPeopleButtonClick() {
 
   createSearchResultBox(section);
 
-  fetch("http://localhost/hw1/search_users.php?u=" + query)
+  fetch("/search_users/" + query)
     .then(response => response.json())
     .then(json => {
       if (json.success) {
