@@ -99,5 +99,32 @@ class MovieController extends BaseController
 
     return $response;
   }
+
+  public function toggleMovieInWatchlist(int $movie_id)
+  {
+    if (!session()->has(['username', 'user_id'])) {
+      return redirect('/login');
+    }
+
+    if (is_null($movie_id)) {
+      return redirect('/home');
+    }
+
+    $user_id = session()->get('user_id');
+    $entry_id = Watchlist::where('user', $user_id)->where('type_id', $movie_id)->value('id');
+    $in_watchlist = !is_null($entry_id);
+
+    if ($in_watchlist) {
+      Watchlist::destroy($entry_id);
+    } else {
+      $new_entry = new Watchlist;
+      $new_entry->type = 'movie';
+      $new_entry->type_id = $movie_id;
+      $new_entry->user = $user_id;
+      $new_entry->save();
+    }
+
+    return ['success' => true, 'in_watchlist' => !$in_watchlist];
+  }
 }
 ?>

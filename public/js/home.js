@@ -321,7 +321,7 @@ function onClickWatchlistButtonBox(event) {
 
   const target = event.currentTarget;
   const movieId = target.parentNode.dataset.movieId;
-  fetch("http://localhost/hw1/watchlist.php?movie_id=" + movieId)
+  fetch("/toggle_movie_in_watchlist/" + movieId)
     .then(response => response.json())
     .then(json => {
       if (json.success) {
