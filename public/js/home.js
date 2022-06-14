@@ -393,7 +393,7 @@ function onFollowButton(event) {
   const toFollow = clicked.dataset.followed !== 'true';
   clicked.setAttribute("data-followed", toFollow);
   clicked.src = toFollow ? 'figures/followed_dark.png' : 'figures/not_followed_dark.png';
-  fetch("toggle_follow/" + clicked.dataset.otherUserId + "/" + toFollow)
+  fetch("toggle_follow/" + toFollow + "/"  + clicked.dataset.otherUserId)
     .then(response => response.json())
     .then(json => {
       if (!json.success) {

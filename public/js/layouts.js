@@ -28,7 +28,7 @@ function createNav(type) {
         id = json.id;
         // link.href = "profile.php?q=" + id;
         // link.textContent = username;
-        linkBox.innerHTML = 'Benvenuto, <a href='+"profile.php?u=" + id +">"+username+"</a>";
+        linkBox.innerHTML = 'Benvenuto, <a href='+"/profile/" + id +">"+username+"</a>";
       })
   }
 

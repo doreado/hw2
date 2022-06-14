@@ -130,25 +130,10 @@ function isValid() {
 }
 
 function subSignup(event) {
-  event.preventDefault();
   if (!isValid()) {
+    event.preventDefault();
     getErrors();
-  } else {
-    const form = document.querySelector("form");
-    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const form_data = { headers: { 'X-CSRF-TOKEN': token }, method: 'post', body: new FormData(form) };
-    fetch('/register', form_data)
-      .then(response => response.json())
-      .then(json => {
-        if (json.success) {
-          console.log(json.message);
-          window.location.href = json.message;
-        } else {
-          console.log("Errore");
-        }
-      });
-  }
-
+   }
 }
 
 const formItems = {
