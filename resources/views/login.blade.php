@@ -16,9 +16,10 @@
   <body>
     <div id="login-screen">
       <h1 id="site-name">L'occhio tagliato</h1>
-      <form name="login">
+      <form action= {{ asset('/login/check_credential') }} method="post" name="login">
         <div><input type="text" name="username" placeholder="Username"></div>
         <div><input type="password" name="password" placeholder="Password"></div>
+        <div><input type="hidden" name="_token" value={{csrf_token()}}></div>
         <div><label>&nbsp;</label><input type="submit"></div>
       </form>
       <div id="new-user">

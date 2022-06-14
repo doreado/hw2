@@ -31,11 +31,12 @@ class LoginController extends BaseController
 
     $id = User::where('username', $request['username'])
         ->where('password', $request['password'])->get('id')->first();
+
     if ($id) {
       session(['user_id' => $id['id'], 'username' => $request['username']]);
-      return ['success' => true, 'route' => 'http://localhost:8000/home'];
+      return redirect('/home');
     }
 
-    return ['success' => false];
+    return redirect('/login');
   }
 }

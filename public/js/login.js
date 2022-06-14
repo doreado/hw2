@@ -43,8 +43,8 @@ function validation(event) {
 }
 
 function vali(event) {
-  event.preventDefault();
   if (form.username.value.length == 0 || form.password.value.length == 0) {
+    event.preventDefault();
     for (let inputBox of inputBoxs) {
       if (!document.querySelector('.empty-' + inputBox.name)
         && form[inputBox.name].value.length == 0) {
@@ -56,26 +56,8 @@ function vali(event) {
         no.appendChild(err);
       }
     }
-  } else if(valid) {
-    const form = document.querySelector("form");
-    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const form_data = { headers: { 'X-CSRF-TOKEN': token }, method: 'post', body: new FormData(form) };
-    fetch("/login/check_credential", form_data)
-      .then(response => response.json())
-      .then(json => {
-        if (json.success) {
-          window.location.href = json.route;
-        } else {
-          if (!document.getElementById('wrong-credential-error')) {
-            const input = document.querySelector('input[type="submit"]')
-            const msg = document.createElement('div');
-            msg.setAttribute('id', 'wrong-credential-error')
-            msg.setAttribute('class', 'error');
-            msg.textContent = 'Credenziali non corrette!';
-            input.parentElement.appendChild(msg, input);
-          }
-        }
-      });
+  } else if(!valid) {
+    event.preventDefault();
   }
 }
 
