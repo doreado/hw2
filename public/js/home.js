@@ -104,12 +104,11 @@ function appendPostHeader(post, divPost) {
   fetch("/get_pics/" + post.user)
     .then(response => response.json())
     .then(json => {
-      if (!json.profile_pic.empty) {
-        profilePicBox.classList.add("post-profile-pic-box")
-        profilePic.setAttribute("id", "post-" + post.id + "-profile-pic");
-        profilePic.setAttribute("class", "post-profile-pic");
-        profilePic.src = 'data:image/jpg;charset=utf8;base64,' + json.profile_pic.src;
-      }
+      profilePicBox.classList.add("post-profile-pic-box")
+      profilePic.setAttribute("id", "post-" + post.id + "-profile-pic");
+      profilePic.setAttribute("class", "post-profile-pic");
+      profilePic.src = json.profile_pic ?  'data:image/jpg;charset=utf8;base64,' + json.profile_pic
+        : 'figures/fallback_profile_icon.png';
     });
 
   const postProfileName = document.createElement("a");
@@ -417,7 +416,9 @@ function displayUserSearchResult(result) {
   resultBox.appendChild(posterBox);
   const poster = document.createElement("img");
   poster.classList.add("profile-pic");
-  poster.src = 'data:image/jpg;charset=utf8;base64,' + result.profile_pic;
+  const profilePic = result.profile_pic ? 'data:image/jpg;charset=utf8;base64,' + result.profile_pic
+    : 'figures/fallback_profile_icon.png';
+  poster.src = profilePic;
   posterBox.appendChild(poster);
 
   const title = document.createElement("a");
@@ -484,21 +485,6 @@ function displayTabRowOption() {
   for (let view of views) {
     view.addEventListener('click', onTabRowOptionClick);
   }
-}
-
-function displayProfilePic() {
-  fetch("http://localhost/hw1/get_pics.php")
-    .then(response => response.json())
-    .then(json => {
-      if (!json.profile_pic.empty) {
-        const profilePic = document.getElementById("profile-pic");
-        const img = document.createElement("img");
-        img.src = 'data:image/jpg;charset=utf8;base64,' + json.profile_pic.src;
-        profilePic.appendChild(img);
-      } else {
-        // TODO: fallback icon and add button to add profile pic
-      }
-    });
 }
 
 function createPostFinished(msg) {
@@ -591,7 +577,6 @@ function displayTabOption() {
 
 function displayHomeHeader() {
   displayTabRowOption();
-  // displayProfilePic();
   displayTabOption();
 }
 

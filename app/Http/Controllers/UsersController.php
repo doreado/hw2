@@ -86,10 +86,10 @@ class UsersController extends BaseController
     }
 
     // check if exists
-    $username = User::find($user_id);
-    if ($username != null) {
+    $user = User::find($user_id);
+    if ($user != null) {
       $success = true;
-      $username = $username->get('username')->first()['username'];
+      $username = $user['username'];
     } else {
       $success = false;
     }
@@ -105,14 +105,11 @@ class UsersController extends BaseController
 
     $pics = UserPic::where('user', $user_id)->get()->first();
 
-    $res = [ 'profile_pic' => [
-                              'empty' => isset($pics->profile_pic) ? false : true,
-                              'src' => base64_encode($pics->profile_pic)
-                              ],
-               'cover_pic' => [
-                              'empty' => isset($pics->profile_pic) ? false : true,
-                              'src' => base64_encode($pics->profile_pic)
-                              ]
+    $res = [
+      'profile_pic' => isset($pics->profile_pic) ?
+        base64_encode($pics->profile_pic) : null,
+      'cover_pic' => isset($pics->cover_pic) ?
+        base64_encode($pics->cover_pic) : null
     ];
 
     return $res;
@@ -128,7 +125,9 @@ class UsersController extends BaseController
         : session()->get('user_id');
     $user = User::find($user_id);
     foreach($user->follower as $follower) {
-      $data[] = [ 'id' => $follower->id, 'profile_pic' => base64_encode($follower->UserPics->profile_pic)];
+      $profile_pic = !is_null($follower->UserPics) && !is_null($follower->UserPics->profile_pic)
+          ? base64_encode($follower->UserPics->profile_pic) : null;
+      $data[] = [ 'id' => $follower->id, 'profile_pic' => $profile_pic ];
     }
 
     return ['data' => $data];
@@ -144,7 +143,9 @@ class UsersController extends BaseController
         : session()->get('user_id');
     $user = User::find($user_id);
     foreach($user->following as $followed) {
-      $data[] = [ 'id' => $followed->id, 'profile_pic' => base64_encode($followed->UserPics->profile_pic)];
+      $profile_pic = !is_null($followed->UserPics) && !is_null($followed->UserPics->profile_pic)
+          ? base64_encode($followed->UserPics->profile_pic) : null;
+      $data[] = [ 'id' => $followed->id, 'profile_pic' => $profile_pic];
     }
 
     return ['data' => $data];
@@ -162,12 +163,19 @@ class UsersController extends BaseController
     $success = !is_null($users->first);
     $data = array();
     foreach ($users as $user) {
-      $pic =  $user->userPics->toArray();
+      if ($user->userPics) {
+        $pic =  $user->userPics->toArray();
+        $profile_pic = base64_encode($pic['profile_pic']);
+        $cover_pic = base64_encode($pic['cover_pic']);
+      } else {
+        $profile_pic = $cover_pic = null;
+      }
+
       $data[] = [
         'id' => $user->id,
         'username' => $user->username,
-        'profile_pic' => base64_encode($pic['profile_pic']),
-        'cover_pic' => base64_encode($pic['cover_pic']),
+        'profile_pic' => $profile_pic,
+        'cover_pic' => $cover_pic,
         // 'followed' => followed($db, $row->id)
       ];
     }

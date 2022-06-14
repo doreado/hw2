@@ -224,7 +224,10 @@ function follower(view) {
           followerPicBox.appendChild(followerProfile);
           const pic = document.createElement("img");
           pic.classList.add("summary-profile-pic")
-          pic.src = 'data:image/jpg;charset=utf8;base64,' + follower.profile_pic;
+          const profilePic = follower.profile_pic ?
+            'data:image/jpg;charset=utf8;base64,' + follower.profile_pic :
+            '/figures/fallback_profile_icon.png';
+          pic.src = profilePic;
           followerProfile.appendChild(pic);
         }
       } else {
@@ -260,7 +263,10 @@ function following(view) {
           followingPicBox.appendChild(followingProfile);
           const pic = document.createElement("img");
           pic.classList.add("summary-profile-pic")
-          pic.src = 'data:image/jpg;charset=utf8;base64,' + following.profile_pic;
+          const profilePic = following.profile_pic ?
+            'data:image/jpg;charset=utf8;base64,' + following.profile_pic :
+            '/figures/fallback_profile_icon.png';
+          pic.src = profilePic;
           followingProfile.appendChild(pic);
         }
       } else {

@@ -19,7 +19,11 @@
   <section>
     <div id="home-header">
       <div id="profile-pic">
-        <img src={{ "data:image/jpg;charset=utf8;base64,".$profile_pic }}>
+        <img src=
+          @if (!is_null($profile_pic))
+          {{ "data:image/jpg;charset=utf8;base64,".$profile_pic }}
+          @else {{ asset('figures/fallback_profile_icon.png') }}
+          @endif>
       </div>
       <div id="home-header-right">
         <div class="tab-row">
