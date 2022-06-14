@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use App\Models\UserPic;
 use App\Models\Watchlist;
 use Illuminate\Support\Facades\Session;
@@ -78,7 +79,6 @@ class MovieController extends BaseController
       return redirect('/home');
     }
 
-    $user_id = session()->get('user_id');
     $api_key = $this->getKey() ;
     $base_url = "http://api.themoviedb.org/3";
     $endpoint = "/movie/".$movie_id."/images?api_key=".$api_key;
@@ -125,6 +125,66 @@ class MovieController extends BaseController
     }
 
     return ['success' => true, 'in_watchlist' => !$in_watchlist];
+  }
+
+  public function getWatchlist()
+  {
+    if (!session()->has(['username', 'user_id'])) {
+      redirect('/login');
+    }
+
+    $user_id = session()->has('profile') ? session()->get('profile')
+        : session()->get('user_id');
+    $watchlist = Watchlist::where('user', $user_id)->get();
+
+    return ['data' => $watchlist];
+  }
+
+  public function getWatchedMovies()
+  {
+    if (!session()->has(['username', 'user_id'])) {
+      redirect('/login');
+    }
+
+    $user_id = session()->has('profile') ? session()->get('profile')
+        : session()->get('user_id');
+    $watched_films = Post::where('type', 'movie')->where('user', $user_id)->orderBy('time', 'desc')->get('type_id');
+
+    return ['data' => $watched_films];
+  }
+
+  public function getMovie(string $movie_id)
+  {
+    if (!session()->has(['username', 'user_id'])) {
+      redirect('/login');
+    }
+
+    if (is_null($movie_id)) {
+      redirect('/profile');
+    }
+
+    $user_id = session()->get('user_id');
+    $api_key = $this->getKey() ;
+    $endpoint = "https://api.themoviedb.org/3/movie/".$movie_id."?api_key=".$api_key;
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $endpoint);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $result = curl_exec($curl);
+    curl_close($curl);
+
+    $data = array();
+    if ($result) {
+      $result = json_decode($result, true);
+
+      $base_url = "https://www.themoviedb.org/t/p/original/";
+      $data = [ 'title' => $result['title'],
+                'release_date' => $result['release_date'],
+                'poster' => $base_url.$result['poster_path']
+              ];
+    }
+
+    return ['data' => $data];
   }
 }
 ?>

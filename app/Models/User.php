@@ -24,12 +24,12 @@ class User extends Model
     return $this->hasOne(UserPic::class, 'user', 'id');
   }
 
-  public function follower()
+  public function following()
   {
     return $this->belongsToMany(User::class, 'FOLLOW', 'follower', 'following');
   }
 
-  public function following()
+  public function follower()
   {
     return $this->belongsToMany(User::class, 'FOLLOW', 'following', 'follower');
   }

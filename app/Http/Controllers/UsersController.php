@@ -68,6 +68,17 @@ class UsersController extends BaseController
     return redirect('/home');
   }
 
+  public function getRecently()
+  {
+    if (!session()->has(['username', 'user_id'])) {
+      return redirect('/login');
+    }
+
+    $user_id = session()->has('profile') ? session()->get('profile')
+        : session()->get('user_id');
+    return ['data' => User::find($user_id)->posts];
+  }
+
   public function getUsername(int $user_id)
   {
     if (!session()->has(['username', 'user_id'])) {
@@ -107,6 +118,38 @@ class UsersController extends BaseController
     return $res;
   }
 
+  public function getFollower()
+  {
+    if (!session()->has(['user_id', 'username'])) {
+      redirect('/login');
+    }
+
+    $user_id = session()->has('profile') ? session()->get('profile')
+        : session()->get('user_id');
+    $user = User::find($user_id);
+    foreach($user->follower as $follower) {
+      $data[] = [ 'id' => $follower->id, 'profile_pic' => base64_encode($follower->UserPics->profile_pic)];
+    }
+
+    return ['data' => $data];
+  }
+
+  public function getFollowed()
+  {
+    if (!session()->has(['user_id', 'username'])) {
+      redirect('/login');
+    }
+
+    $user_id = session()->has('profile') ? session()->get('profile')
+        : session()->get('user_id');
+    $user = User::find($user_id);
+    foreach($user->following as $followed) {
+      $data[] = [ 'id' => $followed->id, 'profile_pic' => base64_encode($followed->UserPics->profile_pic)];
+    }
+
+    return ['data' => $data];
+  }
+
   public function searchUsers(string $user_query)
   {
     if (!session()->has(['username', 'user_id'])) {
@@ -131,7 +174,7 @@ class UsersController extends BaseController
     return ['success' => $success, 'data' => $data];
   }
 
-  public function toggleFollow(int $following_id, string $to_follow)
+  public function toggleFollow(string $to_follow, int $following_id = null)
   {
     if (!session()->has(['username', 'user_id'])) {
       redirect('/login');
@@ -150,7 +193,7 @@ class UsersController extends BaseController
       Follow::where('follower', $follower)->where('following', $followed)->delete();
     }
 
-    echo json_encode(['success' => true]);
+    return ['success' => true];
   }
 }
 ?>

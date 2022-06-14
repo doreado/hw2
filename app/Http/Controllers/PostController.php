@@ -65,6 +65,23 @@ class PostController extends BaseController
     return json_encode($response);
   }
 
+  public function removePost(int $post_id)
+  {
+    if (!session()->has(['username', 'user_id'])) {
+      return redirect('/login');
+    }
+
+    $user_id = session()->get('user_id');
+
+    $success = false;
+    if (Post::find($post_id)->user == $user_id) {
+      $success = true;
+      Post::destroy($post_id);
+    }
+
+    return ['success' => true];
+  }
+
   public function isLiked(int $post_id)
   {
     if (!session()->has(['username', 'user_id'])) {
