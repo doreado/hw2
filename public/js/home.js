@@ -1,5 +1,3 @@
-let offset = 0;
-
 function updateLIke(target, action) {
   if (['add', 'remove'].includes(action)) {
     const postId = target.dataset.postId;
@@ -87,6 +85,29 @@ function appendMoviePoster(post, divPost) {
     });
 }
 
+function createPostProfilePic(postId, profilePic) {
+  const profilePicBox = document.createElement("div");
+  const pic = document.createElement("img");
+  profilePicBox.appendChild(pic);
+  profilePicBox.classList.add("post-profile-pic-box")
+  pic.setAttribute("id", "post-" + postId + "-profile-pic");
+  pic.setAttribute("class", "post-profile-pic");
+  pic.src = profilePic ?  'data:image/jpg;charset=utf8;base64,' + profilePic
+    : 'figures/fallback_profile_icon.png';
+
+  return profilePicBox;
+}
+
+function createPostUsername(postId, userId, username) {
+  const postUsername = document.createElement("a");
+  // postHeaderLeft.appendChild(postProfileName);
+  postUsername.setAttribute("id", "post-" + postId + "-profile-name");
+  postUsername.setAttribute("class", "post-profile-name");
+  postUsername.setAttribute("href", "/profile/" + userId);
+  postUsername.textContent = username;
+  return postUsername;
+}
+
 function appendPostHeader(post, divPost) {
   const postHeader = document.createElement("div");
   postHeader.setAttribute("class", "post-header");
@@ -96,35 +117,25 @@ function appendPostHeader(post, divPost) {
   const time = document.createElement("p");
   time.textContent = getTime(post.time)
   postHeader.appendChild(time);
+  divPost.appendChild(postHeader);
 
-  const profilePicBox = document.createElement("div");
-  const profilePic = document.createElement("img");
-  profilePicBox.appendChild(profilePic);
-  postHeaderLeft.appendChild(profilePicBox);
-  // if (post.user in )
   fetch("/get_pics/" + post.user)
     .then(response => response.json())
     .then(json => {
-      profilePicBox.classList.add("post-profile-pic-box")
-      profilePic.setAttribute("id", "post-" + post.id + "-profile-pic");
-      profilePic.setAttribute("class", "post-profile-pic");
-      profilePic.src = json.profile_pic ?  'data:image/jpg;charset=utf8;base64,' + json.profile_pic
-        : 'figures/fallback_profile_icon.png';
+      let profilePicBox = createPostProfilePic(post.id, json.profile_pic);
+      postHeaderLeft.appendChild(profilePicBox);
+      // users[post.user].profilePic = json.profile_pic;
     });
 
-  const postProfileName = document.createElement("a");
-  postHeaderLeft.appendChild(postProfileName);
   fetch("/get_username/" + post.user)
     .then(response => response.json())
     .then(json => {
       if (json.success) {
-        postProfileName.setAttribute("id", "post-" + post.id + "-profile-name");
-        postProfileName.setAttribute("class", "post-profile-name");
-        postProfileName.setAttribute("href", "/profile/" + post.user);
-        postProfileName.textContent = json.username;
+        let postUsername = createPostUsername(post, post.user, json.username);
+        postHeaderLeft.appendChild(postUsername);
+        // users[post.user].username = json.username;
       }
     });
-  divPost.appendChild(postHeader);
 }
 
 function appendPostText(text, newPost) {
@@ -213,9 +224,10 @@ function onResultBoxClick(event) {
   section.removeChild(document.querySelector(".search-results-box"));
   document.getElementById("home-posts").classList.remove("hidden");
 
-  const searchMovieBox = document.getElementById("search-movie-box");
+  const searchMovieBox = document.querySelector("[data-view-type='movie'] .search-box");
   for (let child of searchMovieBox.childNodes) {
-    child.classList.add("hidden");
+    if (child.nodeType != Node.TEXT_NODE)
+      child.classList.add("hidden");
   }
 
   const selectedMovie = document.createElement("p");
@@ -233,10 +245,14 @@ function onResultBoxClick(event) {
   xIconBox.addEventListener('click', _ => {
     xIconBox.parentNode.removeChild(xIconBox);
     selectedMovie.parentNode.removeChild(selectedMovie);
-    document.getElementById("post-text").parentNode.removeChild(document.getElementById("post-text"));
-    document.getElementById("post-button").parentNode.removeChild(document.getElementById("post-button"));
+    const postText = document.getElementById("post-text");
+    postText.parentNode.removeChild(postText);
+    const postButton = document.getElementById("post-button");
+    postButton.parentNode.removeChild(postButton);
     for (let child of searchMovieBox.childNodes) {
-      child.classList.remove("hidden");
+      if (child.nodeType != Node.TEXT_NODE) {
+        child.classList.remove("hidden");
+      }
     }
   });
 
@@ -261,16 +277,20 @@ function onResultBoxClick(event) {
             offset++;
             displayPost(json.data, document.querySelector("#home-posts-visible"), true);
 
-            const searchMovieBox = document.getElementById('search-movie-box');
+            const searchMovieBox = document.querySelector("[data-view-type='movie'] .search-box");
+            for (let child of searchMovieBox.childNodes) {
+              if (child.nodeType != Node.TEXT_NODE)
+                child.classList.remove("hidden");
+            }
+
             const xIconBox = document.querySelector('.x-icon-box');
             xIconBox.parentNode.removeChild(xIconBox);
-            const selectedMovie = document.querySelector('div#search-movie-box p');
+            const selectedMovie = document.querySelector("[data-view-type='movie'] .search-box p");;
             selectedMovie.parentNode.removeChild(selectedMovie);
-            document.getElementById("post-text").parentNode.removeChild(document.getElementById("post-text"));
-            document.getElementById("post-button").parentNode.removeChild(document.getElementById("post-button"));
-            for (let child of searchMovieBox.childNodes) {
-              child.classList.remove("hidden");
-            }
+            const postText = document.getElementById("post-text");
+            postText.parentNode.removeChild(postText);
+            const postButton = document.getElementById("post-button");
+            postButton.parentNode.removeChild(postButton);
           }
         })
     }
@@ -527,6 +547,11 @@ function removeMoreResultsButton() {
 }
 
 const section = document.querySelector("section");
-let users;
+let offset = 0;
+
 addTabRowOptionListener();
+document.getElementById('search-film-button')
+  .addEventListener('click', onSearchMovieButtonClick);
+document.getElementById('search-people-button')
+  .addEventListener('click', onSearchPeopleButtonClick);
 getPosts();
