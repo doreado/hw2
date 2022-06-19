@@ -2,17 +2,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Routing\Controller as BaseController;
 
-class ProfileController extends BaseController
+class ProfileController extends BaseAppController
 {
   public function showProfile(int $user_id)
   {
-    if (!session()->has(['user_id', 'username'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
-    $logged_id = session()->get('user_id');
+    $logged_id = session('user_id');
     $am_i = $logged_id == $user_id;
     if (!$am_i) {
       session()->put('profile', $user_id);

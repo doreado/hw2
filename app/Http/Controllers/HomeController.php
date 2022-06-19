@@ -6,26 +6,22 @@ use App\Models\UserPic;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-use function GuzzleHttp\json_encode;
-use function redirect;
-use function request;
 
-class HomeController extends BaseController
+class HomeController extends BaseAppController
 {
   public function getHome()
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
     $profile_pic = UserPic::where('user', $user_id)->get('profile_pic')->first();
     if ($profile_pic) $profile_pic = base64_encode($profile_pic->profile_pic);
     $view_param = [
       'profile_pic' => $profile_pic,
-      'user_id' => session()->get('user_id'),
-      'username' => session()->get('username'),
+      'user_id' => $user_id,
+      'username' => session('username'),
     ];
     return view('home', $view_param);
   }

@@ -4,15 +4,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-use function redirect;
-use function request;
 
-class LoginController extends BaseController
+class LoginController extends BaseAppController
 {
   public function show()
   {
-    if (session()->has(['username', 'user_id'])) {
+    if ($this->isLogged()) {
       return redirect('/home');
     }
 
@@ -20,7 +17,7 @@ class LoginController extends BaseController
   }
 
   public function checkCredential() {
-    if (session()->has(['username', 'user_id'])) {
+    if ($this->isLogged()) {
       return redirect('/home');
     }
 

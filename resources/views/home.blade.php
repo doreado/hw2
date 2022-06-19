@@ -31,6 +31,21 @@
         <img src= {{ asset('figures/people_dark.png') }}>
       </div>
     </div>
+    <div class="view" data-view-type="movie">
+      <div class="search-box">
+        <div id="search-input-box">
+          <input id="input-movie" type="text" placeholder="Che film hai visto?">
+        </div>
+        <button id="search-film-button">Cerca</button>
+      </div>
+    </div>
+
+    <div class="view hidden" data-view-type="people">
+      <div class="search-box">
+        <input id="input-people" type="text" placeholder="Cerca qualcuno">
+        <button id="search-people-button">Cerca</button>
+      </div>
+    </div>
   </div>
 </div>
 

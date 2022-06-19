@@ -7,9 +7,8 @@ use App\Models\UserPic;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Routing\Controller as BaseController;
 
-class UsersController extends BaseController
+class UsersController extends BaseAppController
 {
   public function isRegistered(string $key, string $value)
   {
@@ -19,11 +18,11 @@ class UsersController extends BaseController
 
   public function isFollowed(string $other_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       redirect('/login');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
     $is_followed = Follow::where('follower', $user_id)->where('following', $other_id)->get()->first();
     $is_followed= !is_null($is_followed);
     return ['is_followed' => $is_followed];
@@ -31,17 +30,17 @@ class UsersController extends BaseController
 
   public function whoami()
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       redirect('/login');
     }
 
-    return ['id' => session()->get('user_id'),
-        'username' => session()->get('username')];
+    return ['id' => session('user_id'),
+        'username' => session('username')];
   }
 
   public function addUser()
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       redirect('/login');
     }
 
@@ -70,18 +69,17 @@ class UsersController extends BaseController
 
   public function getRecently()
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
-    $user_id = session()->has('profile') ? session()->get('profile')
-        : session()->get('user_id');
+    $user_id = session('profile', session('user_id'));
     return ['data' => User::find($user_id)->posts];
   }
 
   public function getUsername(int $user_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       redirect('/login');
     }
 
@@ -99,7 +97,7 @@ class UsersController extends BaseController
 
   public function getPics(int $user_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       redirect('/login');
     }
 
@@ -121,8 +119,7 @@ class UsersController extends BaseController
       redirect('/login');
     }
 
-    $user_id = session()->has('profile') ? session()->get('profile')
-        : session()->get('user_id');
+    $user_id = session('profile', session('user_id'));
     $user = User::find($user_id);
     foreach($user->follower as $follower) {
       $profile_pic = !is_null($follower->UserPics) && !is_null($follower->UserPics->profile_pic)
@@ -139,8 +136,7 @@ class UsersController extends BaseController
       redirect('/login');
     }
 
-    $user_id = session()->has('profile') ? session()->get('profile')
-        : session()->get('user_id');
+    $user_id = session('profile', session('user_id'));
     $user = User::find($user_id);
     foreach($user->following as $followed) {
       $profile_pic = !is_null($followed->UserPics) && !is_null($followed->UserPics->profile_pic)
@@ -153,11 +149,11 @@ class UsersController extends BaseController
 
   public function searchUsers(string $user_query)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       redirect('/login');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
     $users = User::where('username', 'like', '%' .$user_query. '%')
       ->where('id', '!=', $user_id)->limit('10')->get();
     $success = !is_null($users->first);
@@ -184,14 +180,15 @@ class UsersController extends BaseController
 
   public function toggleFollow(string $to_follow, int $following_id = null)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       redirect('/login');
     }
 
     $followed = is_null($following_id) && session()->has('profile') ?
         session()->get('profile') : $following_id;
 
-    $follower = session()->get('user_id');
+    $followed = session('profile', session('user_id'));
+    $follower = session('user_id');
     if ($to_follow == 'true') {
       $follow = new Follow;
       $follow->follower = $follower;

@@ -101,6 +101,7 @@ function appendPostHeader(post, divPost) {
   const profilePic = document.createElement("img");
   profilePicBox.appendChild(profilePic);
   postHeaderLeft.appendChild(profilePicBox);
+  // if (post.user in )
   fetch("/get_pics/" + post.user)
     .then(response => response.json())
     .then(json => {
@@ -186,58 +187,21 @@ function getPosts() {
   fetch("/get_posts/" + offset)
     .then(response => response.json())
     .then(json => {
+      let endMsg = "Perché non pubblichi un nuovo post?";
       if (json.empty) {
-        removeMoreResults();
-        createPostFinished(json.msg);
+        removeMoreResultsButton();
+        createPostFinishedMessage(endMsg);
       } else {
-        viewPosts(json.content, document.querySelector("#home-posts-visible"));
         if (json.end) {
-          removeMoreResults();
-          createPostFinished(json.msg);
+          removeMoreResultsButton();
+          createPostFinishedMessage(endMsg);
         } else {
-          createMoreResults();
+          createMoreResultsButton();
           offset += 10;
         }
+        viewPosts(json.content, document.querySelector("#home-posts-visible"));
       }
     });
-}
-
-function createMovieView(movieView) {
-  const searchBox = document.createElement("div");
-  searchBox.setAttribute("id", "search-movie-box");
-  movieView.appendChild(searchBox);
-
-  const searchInputBox = document.createElement("div");
-  searchInputBox.setAttribute("id", "search-input-box");
-  searchBox.appendChild(searchInputBox);
-  const searchInput = document.createElement("input");
-  searchInput.setAttribute("id", "input-movie");
-  searchInput.setAttribute("type", "text");
-  searchInput.setAttribute("placeholder", "Che film hai visto?");
-  searchInputBox.appendChild(searchInput);
-
-  const searchButton = document.createElement("button");
-  searchButton.setAttribute("id", "search-film-button");
-  searchButton.textContent = "Cerca";
-  searchBox.appendChild(searchButton);
-}
-
-function createPeopleView(peopleView) {
-  const searchBox = document.createElement("div");
-  peopleView.appendChild(searchBox);
-
-  const searchInput = document.createElement("input");
-  searchInput.setAttribute("id", "input-people");
-  searchInput.setAttribute("type", "text");
-  searchInput.setAttribute("placeholder", "Cerca qualcuno");
-  searchBox.appendChild(searchInput);
-
-  const searchPeopleButton = document.createElement("button");
-  searchPeopleButton.setAttribute("id", "search-people-button");
-  searchPeopleButton.textContent = "Cerca";
-  searchPeopleButton.addEventListener('click', onSearchPeopleButtonClick);
-
-  searchBox.appendChild(searchPeopleButton);
 }
 
 function onResultBoxClick(event) {
@@ -375,7 +339,7 @@ function displaySearchResult(result) {
 function updateHome(followed, newFollowing) {
   if (newFollowing) {
     document.getElementById('home-posts-visible').innerHTML = '';
-    createMoreResults();
+    createMoreResultsButton();
 
     offset = 0;
     getPosts();
@@ -454,40 +418,14 @@ function onTabRowOptionClick(event) {
     .classList.remove("hidden");
 }
 
-function displayTabRowOption() {
-  // const movieIconBox = document.querySelector(".tab-row-option[data-view-type='movie']");
-  // const movieIcon = document.createElement("img");
-  // movieIcon.src = "figures/movie.png";
-  // movieIconBox.appendChild(movieIcon);
-
-  const headerRight = document.getElementById('home-header-right');
-  const movieView = document.createElement("div");
-  movieView.classList.add("view");
-  movieView.setAttribute("data-view-type", 'movie');
-  headerRight.appendChild(movieView);
-
-  createMovieView(movieView);
-
-  // const peopleIconBox = document.querySelector("[data-view-type='people']");
-  // const peopleIcon = document.createElement("img");
-  // peopleIcon.src = "figures/people_dark.png";
-  // peopleIconBox.appendChild(peopleIcon);
-
-  const peopleView = document.createElement("div");
-  peopleView.classList.add("view");
-  peopleView.classList.add("hidden");
-  peopleView.setAttribute("data-view-type", 'people');
-  headerRight.appendChild(peopleView);
-
-  createPeopleView(peopleView);
-
+function addTabRowOptionListener() {
   const views = document.querySelectorAll(".tab-row-option");
   for (let view of views) {
     view.addEventListener('click', onTabRowOptionClick);
   }
 }
 
-function createPostFinished(msg) {
+function createPostFinishedMessage(msg) {
   const mess = document.createElement("h1");
   const homePosts = document.getElementById('home-posts');
   mess.setAttribute('id', 'post-finished');
@@ -566,21 +504,7 @@ function onSearchMovieButtonClick() {
     });
 }
 
-function displayTabOption() {
-  const inputMovie = document.getElementById("input-movie");
-  const postText = document.getElementById("post-text");
-  const searchMovieButton = document.getElementById("search-film-button");
-  const searchMoviBox = document.createElement("div")
-  searchMoviBox.setAttribute("id", "search-movie-box")
-  searchMovieButton.addEventListener('click', onSearchMovieButtonClick);
-}
-
-function displayHomeHeader() {
-  displayTabRowOption();
-  displayTabOption();
-}
-
-function createMoreResults() {
+function createMoreResultsButton() {
   let more = document.getElementById('more-results');
   if (more) return;
   more = document.createElement("button");
@@ -596,13 +520,13 @@ function createMoreResults() {
   homePosts.appendChild(more);
 }
 
-function removeMoreResults() {
+function removeMoreResultsButton() {
   const moreResults = document.getElementById('more-results');
   if (moreResults)
     moreResults.parentNode.removeChild(moreResults);
 }
 
 const section = document.querySelector("section");
-
-displayHomeHeader();
+let users;
+addTabRowOptionListener();
 getPosts();

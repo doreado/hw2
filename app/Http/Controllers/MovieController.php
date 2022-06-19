@@ -7,12 +7,8 @@ use App\Models\UserPic;
 use App\Models\Watchlist;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-use function GuzzleHttp\json_encode;
-use function redirect;
-use function request;
 
-class MovieController extends BaseController
+class MovieController extends BaseAppController
 {
   private function getKey()
   {
@@ -21,7 +17,7 @@ class MovieController extends BaseController
 
   public function searchMovie(string $movie)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
@@ -29,7 +25,7 @@ class MovieController extends BaseController
       return redirect('/home');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
     $api_key = $this->getKey() ;
     $movie = urlencode($movie);
     $endpoint = "https://api.themoviedb.org/3/search/movie?api_key=".$api_key."&query=".$movie."&total_results=10";
@@ -71,7 +67,7 @@ class MovieController extends BaseController
 
   public function getMoviePoster(string $movie_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
@@ -92,7 +88,7 @@ class MovieController extends BaseController
     $result_array = json_decode($result, true);
     // TODO check if exists
     $poster_id = $result_array['posters'][0]['file_path'];
-    $base_src = "https://www.themoviedb.org/t/p/original/";
+    $base_src = "https://www.themoviedb.org/t/p/original";
     $src = $base_src.$poster_id;
     $success = true;
     $response = ['success' => true, 'src' => $src];
@@ -102,7 +98,7 @@ class MovieController extends BaseController
 
   public function toggleMovieInWatchlist(int $movie_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
@@ -110,7 +106,7 @@ class MovieController extends BaseController
       return redirect('/home');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
     $entry_id = Watchlist::where('user', $user_id)->where('type_id', $movie_id)->value('id');
     $in_watchlist = !is_null($entry_id);
 
@@ -129,12 +125,12 @@ class MovieController extends BaseController
 
   public function getWatchlist()
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       redirect('/login');
     }
 
-    $user_id = session()->has('profile') ? session()->get('profile')
-        : session()->get('user_id');
+    $user_id = session()->has('profile') ? session('profile')
+        : session('user_id');
     $watchlist = Watchlist::where('user', $user_id)->get();
 
     return ['data' => $watchlist];
@@ -142,12 +138,12 @@ class MovieController extends BaseController
 
   public function getWatchedMovies()
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       redirect('/login');
     }
 
-    $user_id = session()->has('profile') ? session()->get('profile')
-        : session()->get('user_id');
+    $user_id = session()->has('profile') ? session('profile')
+        : session('user_id');
     $watched_films = Post::where('type', 'movie')->where('user', $user_id)->orderBy('time', 'desc')->get('type_id');
 
     return ['data' => $watched_films];
@@ -155,7 +151,7 @@ class MovieController extends BaseController
 
   public function getMovie(string $movie_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       redirect('/login');
     }
 
@@ -163,7 +159,7 @@ class MovieController extends BaseController
       redirect('/profile');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
     $api_key = $this->getKey() ;
     $endpoint = "https://api.themoviedb.org/3/movie/".$movie_id."?api_key=".$api_key;
 

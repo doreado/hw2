@@ -6,13 +6,12 @@ use App\Models\UserPic;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Routing\Controller as BaseController;
 
-class SignupController extends BaseController
+class SignupController extends BaseAppController
 {
   public function show()
   {
-    if (session()->has(['username', 'user_id'])) {
+    if ($this->isLogged()) {
       return redirect('/home');
     }
 

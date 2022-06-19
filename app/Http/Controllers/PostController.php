@@ -4,22 +4,15 @@ namespace App\Http\Controllers;
 use App\Models\Follow;
 use App\Models\Like;
 use App\Models\Post;
-use App\Models\UserPic;
-use App\Models\Watchlist;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-use function GuzzleHttp\json_encode;
-use function redirect;
-use function request;
-use function urldecode;
 
-class PostController extends BaseController
+class PostController extends BaseAppController
 {
   public function addPost(string $type, string $type_id, string $text)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
@@ -28,7 +21,7 @@ class PostController extends BaseController
     }
 
     $post = new Post;
-    $post->user = session()->get('user_id');
+    $post->user = session('user_id');
     $post->content = $text;
     $post->type = $type;
     $post->type_id = $type_id;
@@ -41,7 +34,7 @@ class PostController extends BaseController
 
   public function getPosts(int $offset)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
@@ -49,9 +42,9 @@ class PostController extends BaseController
       return redirect('/login');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
     $posts = Post::where('user', $user_id)->orWhereIn('user', function($query) {
-      $user_id = session()->get('user_id');
+      $user_id = session('user_id');
       $query->select('following')
           ->from(with(new Follow)->getTable())
           ->where('follower', $user_id);
@@ -67,11 +60,11 @@ class PostController extends BaseController
 
   public function removePost(int $post_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
 
     $success = false;
     if (Post::find($post_id)->user == $user_id) {
@@ -84,7 +77,7 @@ class PostController extends BaseController
 
   public function isLiked(int $post_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
@@ -92,7 +85,7 @@ class PostController extends BaseController
       return redirect('/home');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
 
     $liked = Like::where('post', $post_id)->where('user', $user_id)->exists();
     $success = true;
@@ -104,7 +97,7 @@ class PostController extends BaseController
 
   public function getLikeNumber(int $post_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
@@ -121,7 +114,7 @@ class PostController extends BaseController
 
   public function addLike(int $post_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
@@ -129,7 +122,7 @@ class PostController extends BaseController
       return redirect('/home');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
 
     $like = new Like;
     $like->post = $post_id;
@@ -141,7 +134,7 @@ class PostController extends BaseController
 
   public function removeLike(int $post_id)
   {
-    if (!session()->has(['username', 'user_id'])) {
+    if (!$this->isLogged()) {
       return redirect('/login');
     }
 
@@ -149,7 +142,7 @@ class PostController extends BaseController
       return redirect('/home');
     }
 
-    $user_id = session()->get('user_id');
+    $user_id = session('user_id');
     Like::where('post', $post_id)->where('user', $user_id)->delete();
 
     return ['success' => true];

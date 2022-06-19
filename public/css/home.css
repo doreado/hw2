@@ -169,7 +169,7 @@ div#post-text {
   justify-content: space-between;
 }
 
-#search-movie-box {
+.search-box, #search-movie-box {
   display: flex;
   align-items: center;
 }

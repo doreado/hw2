@@ -3,14 +3,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-use function redirect;
-use function request;
 
-class LogoutController extends BaseController {
+class LogoutController extends BaseAppController {
   public function logout()
   {
-    if (session()->has(['username', 'user_id'])) {
+    if ($this->isLogged()) {
       session()->flush();
       return redirect('/login');
     }
