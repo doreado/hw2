@@ -604,6 +604,5 @@ function removeMoreResults() {
 
 const section = document.querySelector("section");
 
-createNav('home');
 displayHomeHeader();
 getPosts();

@@ -22,7 +22,12 @@ class HomeController extends BaseController
     $user_id = session()->get('user_id');
     $profile_pic = UserPic::where('user', $user_id)->get('profile_pic')->first();
     if ($profile_pic) $profile_pic = base64_encode($profile_pic->profile_pic);
-    return view('home')->with('profile_pic', $profile_pic);
+    $view_param = [
+      'profile_pic' => $profile_pic,
+      'user_id' => session()->get('user_id'),
+      'username' => session()->get('username'),
+    ];
+    return view('home', $view_param);
   }
 }
 ?>

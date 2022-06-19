@@ -334,9 +334,6 @@ for (let view of views) {
 const selected = document.querySelector(".tab-row-option.selected");
 
 let loggedProfile = true ;
-createNav('profile');
-// getPics();
-// getUsername();
 const image = document.querySelector('.icon-box img.icon');
 if (image) {
     image.addEventListener('click', onFollowButton);
