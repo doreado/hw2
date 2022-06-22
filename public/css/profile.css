@@ -44,6 +44,9 @@ div#username {
   color: var(--gb-bright_orange);
 }
 
+nav {
+  z-index: 2;
+}
 div#cover {
   position: absolute;
 
@@ -56,10 +59,6 @@ div#cover {
 
   z-index: 0;
 }
-
-/* div#cover img { */
-/**/
-/* } */
 
 div#profile-pic {
   position: absolute;

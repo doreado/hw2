@@ -220,12 +220,13 @@ div#post-text {
 #more-results:hover {
   background-color: rgba(0, 0, 0, 0.2);
 }
+
 @media (max-width: 1012px) {
   section {
     margin:  49px 0px auto 0px ;
   }
 
-  #home-posts {
+  #home-posts, .search-results-box {
     width: 100%;
   }
   .post {

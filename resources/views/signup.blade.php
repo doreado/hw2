@@ -1,21 +1,22 @@
-<html lang="en">
+<html lang="it">
   <head>
     <title>L'occhio tagliato</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/theme.css" rel="stylesheet">
-    <link href="css/login.css" rel="stylesheet">
+    <link href={{ asset("css/theme.css") }} rel="stylesheet">
+    <link href={{ asset("css/login.css") }} rel="stylesheet">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Frijole&display=swap" rel="stylesheet">
 
-    <script src="js/signup.js" defer="true"> </script>
+    <script src={{ asset("js/signup.js") }} defer="true"> </script>
   </head>
 
   <body>
     <div id="signup-screen">
       <h1 id='site-name'>L'occhio tagliato</h1>
-      <h2>Crea il tuo account</h1>
+      <h2>Crea il tuo account</h2>
       <form name="signup" method="post" action={{asset('/register')}} enctype="multipart/form-data">
         <p><input type="text" name="username" placeholder="Username"></p>
         <p><input type="text" name="name" placeholder="Nome"></p>

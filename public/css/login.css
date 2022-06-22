@@ -1,20 +1,11 @@
 @import url(./colors.css);
 
-html {
-  background-color: var(--gb-dark0_soft);
-}
-
 body {
-  margin: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* padding: 20%; */
 
   background-color: #32302f;
-  border-width: 2px;
-  border-style: solid;
-  border-color: gainsboro;
 }
 
 #login-screen {
@@ -34,7 +25,7 @@ h1 {
 }
 
 label {
-  color: var(--gb-light0);
+  color: dark;
   margin-right: 5.5px;
 }
 
