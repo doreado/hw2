@@ -34,6 +34,6 @@ class LoginController extends BaseAppController
       return redirect('/home');
     }
 
-    return redirect('/login');
+    return view('login')->with('wrong', true);
   }
 }
