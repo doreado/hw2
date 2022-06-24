@@ -250,7 +250,7 @@ function following(view) {
   fetch("/get_followed")
     .then(response => response.json())
     .then(json => {
-      if (json.data) {
+      if (json.data.length) {
         const followed = json.data;
 
         const followingPicBox = document.createElement("div");

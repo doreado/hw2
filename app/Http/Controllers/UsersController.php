@@ -121,6 +121,7 @@ class UsersController extends BaseAppController
 
     $user_id = session('profile', session('user_id'));
     $user = User::find($user_id);
+    $data = [];
     foreach($user->follower as $follower) {
       $profile_pic = !is_null($follower->UserPics) && !is_null($follower->UserPics->profile_pic)
           ? base64_encode($follower->UserPics->profile_pic) : null;
@@ -138,6 +139,7 @@ class UsersController extends BaseAppController
 
     $user_id = session('profile', session('user_id'));
     $user = User::find($user_id);
+    $data = [];
     foreach($user->following as $followed) {
       $profile_pic = !is_null($followed->UserPics) && !is_null($followed->UserPics->profile_pic)
           ? base64_encode($followed->UserPics->profile_pic) : null;
