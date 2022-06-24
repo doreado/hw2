@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserPref;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends BaseAppController
 {
@@ -35,10 +37,13 @@ class ProfileController extends BaseAppController
       $followed = $user->follower()->where('follower', $logged_id)->first() != null;
     }
 
+    $prefs = UserPref::where('user', strval($user_id))->get();
+
     $par = [
       'username' => $user->username,
       'am_i' => $am_i,
       'followed' => $followed ? "true" : "false",
+      'prefs' => $prefs,
 
       'cover_pic' => $cover_pic,
       'profile_pic' => $profile_pic,

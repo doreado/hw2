@@ -45,7 +45,7 @@ div#username {
 }
 
 nav {
-  z-index: 2;
+  z-index: 3;
 }
 div#cover {
   position: absolute;
@@ -136,7 +136,7 @@ div.view.hidden {
   height: 100%;
 }
 
-.x-icon-box {
+.plus-icon-box, .x-icon-box {
   display: flex;
   height: 20px;
   align-items: center;
@@ -144,13 +144,21 @@ div.view.hidden {
   border-radius: 0.5em;
 }
 
-.x-icon-box:hover {
+.plus-icon:hover, .x-icon-box:hover {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.x-icon {
+.plus-icon, .x-icon {
   height: 100%;
   border-radius: 50%;
-  padding: 2px;
+  padding: 2%;
 }
 
+.preference-box p {
+  font-size: 20px;
+}
+.preference-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

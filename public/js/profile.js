@@ -75,40 +75,86 @@ function viewPosts(data, view) {
   }
 }
 
-function getPics() {
-  fetch("http://localhost/hw1/get_pics.php")
-    .then(response => response.json())
-    .then(json => {
-      if (!json.cover_pic.empty) {
-        const cover = document.getElementById("cover");
-        const path = 'data:image/jpg;charset=utf8;base64,' + json.cover_pic.src;
-        cover.style.backgroundImage = "url(" + path + ")";
-      } else {
-        // TODO: add button to add cover
+function removePreference(event) {
+  const clicked = event.currentTarget;
+  fetch("http://localhost:8000/remove_preference/"
+    + clicked.dataset.preferenceType + "/" + clicked.dataset.preference)
+    .then(response => response.json)
+    .then( _ => {
+      const plusIcon = clicked.parentNode.parentNode.querySelector('.plus-icon-box');
+      plusIcon.classList.remove('hidden');
+      plusIcon.addEventListener('click', onPlusIconClick);
+      clicked.parentNode.parentNode.removeChild(clicked.parentNode);
       }
-      if (!json.profile_pic.empty) {
-        const profile_pic = document.getElementById("profile-pic");
-        const img = document.createElement("img");
-        img.src = 'data:image/jpg;charset=utf8;base64,' + json.profile_pic.src;
-        profile_pic.appendChild(img);
-      } else {
-        // TODO: fallback icon and add button to add profile pic
-      }
-    });
+    )
 }
 
-function createSettings() {
-  const tabRow = document.querySelector(".tab-row");
-  const tabOption = document.createElement("div");
-  tabOption.classList.add("tab-row-option");
-  tabOption.setAttribute("data-view-type", "settings");
-  tabOption.textContent = "Impostazioni";
-  tabRow.appendChild(tabOption);
+function addPreference(event) {
+  const form = event.currentTarget.parentNode;
+  const plusButton = form.parentNode.querySelector('.plus-icon-box');
+  event.preventDefault()
 
-  const view = document.createElement("div");
-  view.setAttribute("class", "view hidden");
-  view.setAttribute("data-view-type", "settings");
-  document.querySelector(".tab-view").appendChild(view);
+  const formData = new FormData(form);
+  if (formData.get('pref').length == 0) {
+    return;
+  }
+
+  fetch("http://localhost:8000/add_preference", {
+    method: "post",
+    body: formData
+  });
+
+  event.currentTarget.removeEventListener('click', addPreference);
+  form.classList.add('hidden');
+  const itemBox = document.createElement('div');
+  itemBox.classList.add('preference-box');
+
+  const item = document.createElement('p');
+  item.textContent = formData.get('pref');
+  item.classList.add('preference');
+  itemBox.appendChild(item);
+  const xIconBox = document.createElement("div");
+  xIconBox.classList.add("x-icon-box");
+  xIconBox.setAttribute('data-preference-type', formData.get('type'));
+  xIconBox.setAttribute('data-preference', formData.get('pref'));
+  xIconBox.addEventListener('click', removePreference)
+  const xIcon = document.createElement("img");
+  xIcon.classList.add("x-icon");
+  xIcon.src = "http://localhost:8000/figures/x_icon_dark.png";
+  xIconBox.append(xIcon);
+  itemBox.appendChild(xIconBox)
+
+  plusButton.parentNode.insertBefore(itemBox, plusButton);
+  if (form.parentNode.querySelectorAll('.preference-box').length < 5) {
+    plusButton.classList.remove('hidden');
+    plusButton.addEventListener('click', onPlusIconClick)
+  }
+}
+
+function onPlusIconClick(event) {
+  event.currentTarget.classList.add('hidden');
+  event.currentTarget.removeEventListener('click', onPlusIconClick);
+  const form = event.currentTarget.parentNode.querySelector('form');
+  if (form) form.classList.remove('hidden');
+  form.querySelector('[type=submit]').addEventListener('click', addPreference);
+  // event.currentTarget.parentNode.remkoveChild(event.currentTarget);
+}
+
+function setPreferences() {
+  if (!loggedProfile) return;
+
+  const preferences = document.querySelectorAll('.preference-box .x-icon-box');
+  if (!preferences) return;
+  preferences.forEach(node => {
+    node.addEventListener('click', removePreference)
+  })
+
+  document.querySelectorAll('.plus-icon-box').forEach(node =>{
+    if (node.parentNode.querySelectorAll('.preference-box').length < 5) {
+      node.classList.remove('hidden');
+      node.addEventListener('click', onPlusIconClick);
+    }
+  })
 }
 
 function createRecently() {
@@ -278,28 +324,8 @@ function following(view) {
 }
 
 function getUsername() {
-  // const username = document.getElementById("username");
-  // await fetch("http://localhost/hw1/username.php")
-  //   .then(response => response.json())
-  //   .then(json => {
-  //     if (json.success) {
-  //       username.textContent = json.username;
-  //     }
-  //   });
-
-  // fetch("http://localhost/hw1/followed.php")
-  //   .then(response => response.json())
-  //   .then(json => {
-  //     if (json.success) {
-        // const box = document.createElement('div');
-        // box.classList.add('icon-box');
-        // username.appendChild(box);
-        const image = document.querySelector('.icon-box img.icon');
-        image.addEventListener('click', onFollowButton);
-      //   image.src = image.dataset.followed === 'true' ? 'figures/followed_dark.png' : 'figures/not_followed_dark.png';
-      //   box.appendChild(image)
-      // }
-    // })
+  const image = document.querySelector('.icon-box img.icon');
+  image.addEventListener('click', onFollowButton);
 }
 
 function createSummary() {
@@ -309,8 +335,6 @@ function createSummary() {
   document.querySelector(".tab-view").appendChild(view);
 
   watchedFilms(view);
-  // readBooks();
-  // listenedMusic();
   watchlist(view);
   follower(view);
   following(view);
@@ -341,3 +365,4 @@ if (image) {
 }
 createSummary();
 createRecently();
+setPreferences()

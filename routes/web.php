@@ -41,3 +41,6 @@ Route::get('/remove_like/{post_id}', 'App\Http\Controllers\PostController@remove
 Route::get('/logout', 'App\Http\Controllers\LogoutController@logout');
 
 Route::get('/profile/{user_id}', 'App\Http\Controllers\ProfileController@showProfile');
+
+Route::get('/remove_preference/{type}/{preference}', 'App\Http\Controllers\UserPrefController@removePreference');
+Route::post('/add_preference/', 'App\Http\Controllers\UserPrefController@addPreference');
