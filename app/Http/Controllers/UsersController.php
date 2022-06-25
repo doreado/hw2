@@ -44,9 +44,17 @@ class UsersController extends BaseAppController
       redirect('/login');
     }
 
-    $request = request()->all();
+    if (!isset($request['username']) || !isset($request['name'])
+      || !isset($request['surname']) || !isset($request['email'])
+      || !isset($request['password'])) {
+      return redirect('/signup');
+    }
 
-    // TODO VALIDATION
+    if (strlen($request['username']) < 4 || strlen($request['username']) > 8) {
+      return redirect('/signup');
+    }
+
+    $request = request()->all();
 
     $user = new User;
     $user->username = $request['username'];
@@ -174,7 +182,6 @@ class UsersController extends BaseAppController
         'username' => $user->username,
         'profile_pic' => $profile_pic,
         'cover_pic' => $cover_pic,
-        // 'followed' => followed($db, $row->id)
       ];
     }
     return ['success' => $success, 'data' => $data];
